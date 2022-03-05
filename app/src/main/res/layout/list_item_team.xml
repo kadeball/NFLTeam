@@ -1,14 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="16dp">
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_colts"/>
+    android:layout_height="wrap_content"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/team_name"
@@ -16,11 +10,7 @@
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/team_division"
+        android:id="@+id/stadium_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

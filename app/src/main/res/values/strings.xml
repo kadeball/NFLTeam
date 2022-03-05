@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">NFLTeam</string>
-    <string name="team_name">Indianapolis Colts</string>
+    <string name="app_name"></string>
+    <string name="team_name"></string>
     <string name="team_logo"></string>
-    <string name="stadium_name">Lucas Oil Stadium</string>
-    <string name="team_division">AFC South</string>
-    <string name="map_view">Map</string>
+    <string name="stadium_name"></string>
+    <string name="team_division"></string>
+    <string name="map_view"></string>
+    <string name="latitude">latitude:</string>
+    <string name="longitude">longitude:</string>
 </resources>
