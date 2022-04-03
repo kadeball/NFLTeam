@@ -8,16 +8,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import java.util.*
+
+private const val ARG_TEAM_ID = "team_id"
+
 
 class TeamFragment : Fragment() {
+    companion object {
+        fun newInstance(teamId: UUID): TeamFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_TEAM_ID,teamId)
+            }
+            return TeamFragment().apply {
+                arguments = args
+            }
+        }
+    }
+
 
     private lateinit var team: Team
     private lateinit var name: TextView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        team = Team()
+        val teamId: UUID = arguments?.getSerializable(ARG_TEAM_ID) as UUID
+        team = TeamListViewModel.getTeam(teamId)!!
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,6 +47,7 @@ class TeamFragment : Fragment() {
 
         return view
     }
+
     override fun onStart() {
         super.onStart()
 

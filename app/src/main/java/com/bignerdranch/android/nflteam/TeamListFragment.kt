@@ -1,34 +1,38 @@
 package com.bignerdranch.android.nflteam
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
-private const val TAG = "TeamListFragment"
 
 class TeamListFragment : Fragment() {
+    interface Callbacks {
+        fun onteamSelected(teamId: UUID)
+    }
+
+    private var callbacks: Callbacks? = null
 
     private lateinit var teamRecyclerView: RecyclerView
-    private var adapter: TeamAdapter? = null
+    private var adapter: TeamAdapter = TeamAdapter(emptyList())
 
 
-
-    private val teamListViewModel: TeamListViewModel by lazy {
-        ViewModelProviders.of(this).get(TeamListViewModel::class.java)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total crimes: ${teamListViewModel.teams.size}")
-    }
 
+    // Inflate the layout for this fragment
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,27 +40,55 @@ class TeamListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_team_list, container, false)
 
-        teamRecyclerView =
-            view.findViewById(R.id.team_recycler_view) as RecyclerView
+        teamRecyclerView = view.findViewById(R.id.team_recycler_view) as RecyclerView
         teamRecyclerView.layoutManager = LinearLayoutManager(context)
-
-        updateUI()
+        teamRecyclerView.adapter = adapter
+        teamRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                this.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         return view
     }
 
-    private fun updateUI() {
-        val teams = teamListViewModel.teams
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("aaa", TeamListViewModel.teams.toString())
+        updateUI(TeamListViewModel.teams)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
+
+    private fun updateUI(teams: List<Team>) {
+        val teams = TeamListViewModel.teams
         adapter = TeamAdapter(teams)
         teamRecyclerView.adapter = adapter
     }
 
-    private inner class TeamHolder(view: View)
-        : RecyclerView.ViewHolder(view) {
+
+    private inner class TeamHolder(view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
+
+        private lateinit var team: Team
 
         val nameTextView: TextView = itemView.findViewById(R.id.team_name)
         val stadiumTextView: TextView = itemView.findViewById(R.id.stadium_name)
-    }
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        fun bind(team: Team) {
+            this.team = team
+            nameTextView.text = this.team.teamName
+        }
+
 
     private inner class TeamAdapter(var teams: List<Team>)
         : RecyclerView.Adapter<TeamHolder>() {
@@ -79,9 +111,12 @@ class TeamListFragment : Fragment() {
     }
 
 
-    companion object {
-        fun newInstance(): TeamListFragment {
-            return TeamListFragment()
+        override fun onClick(v: View) {
+            Toast.makeText(context, "${team.teamName} clicked!", Toast.LENGTH_SHORT)
+                .show()
+            callbacks?.onteamSelected(team.id)
         }
     }
+
 }
+
