@@ -72,13 +72,29 @@ class TeamListFragment : Fragment() {
     }
 
 
-    private inner class TeamHolder(view: View) : RecyclerView.ViewHolder(view),
-        View.OnClickListener {
+    private inner class TeamAdapter(var teams: List<Team>) : RecyclerView.Adapter<TeamHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : TeamHolder {
+            val layoutInflater = LayoutInflater.from(context)
+            val view = layoutInflater.inflate(R.layout.list_item_team, parent, false)
+            return TeamHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: TeamHolder, position: Int) {
+            val team = teams[position]
+            holder.bind(team)
+        }
+
+        override fun getItemCount() = teams.size
+    }
+
+    private inner class TeamHolder(view: View)  : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         private lateinit var team: Team
 
-        val nameTextView: TextView = itemView.findViewById(R.id.team_name)
-        val stadiumTextView: TextView = itemView.findViewById(R.id.stadium_name)
+        private val teamName: TextView = itemView.findViewById(R.id.team_name)
+        private val stadiumName: TextView = itemView.findViewById(R.id.stadium_name)
+
 
         init {
             itemView.setOnClickListener(this)
@@ -86,30 +102,9 @@ class TeamListFragment : Fragment() {
 
         fun bind(team: Team) {
             this.team = team
-            nameTextView.text = this.team.teamName
+            teamName.text = this.team.teamName
+            stadiumName.text = this.team.stadium
         }
-
-
-    private inner class TeamAdapter(var teams: List<Team>)
-        : RecyclerView.Adapter<TeamHolder>() {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-                : TeamHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_team, parent, false)
-            return TeamHolder(view)
-        }
-
-        override fun getItemCount() = teams.size
-
-        override fun onBindViewHolder(holder: TeamHolder, position: Int) {
-            val team = teams[position]
-            holder.apply {
-                nameTextView.text = team.teamName
-                stadiumTextView.text = team.stadium
-            }
-        }
-    }
-
 
         override fun onClick(v: View) {
             Toast.makeText(context, "${team.teamName} clicked!", Toast.LENGTH_SHORT)
@@ -119,4 +114,3 @@ class TeamListFragment : Fragment() {
     }
 
 }
-
