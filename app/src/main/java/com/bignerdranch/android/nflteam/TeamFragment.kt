@@ -27,6 +27,9 @@ class TeamFragment : Fragment() {
     }
 
     private lateinit var titleField: TextView
+    private lateinit var stadiumField: TextView
+    private lateinit var divField: TextView
+
     private lateinit var team: Team
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +42,8 @@ class TeamFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_team, container, false)
 
         titleField = view.findViewById(R.id.team_name) as TextView
+        stadiumField = view.findViewById(R.id.stadium_name) as TextView
+        divField = view.findViewById(R.id.team_division) as TextView
 
         return view
     }
@@ -55,6 +60,8 @@ class TeamFragment : Fragment() {
 
     private fun updateUI() {
         titleField.setText(team.teamName)
+        stadiumField.setText(team.stadium)
+        divField.setText(team.division)
     }
 
 }
